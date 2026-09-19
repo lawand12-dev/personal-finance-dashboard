@@ -6,7 +6,7 @@
 "use strict";
 
 const STORAGE_KEY = "finova.data.v1";
-const OPENING_BALANCE = 4200;
+const OPENING_BALANCE = 0;
 
 const INCOME_CATEGORY = {
   id: "income",

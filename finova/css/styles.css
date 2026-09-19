@@ -158,7 +158,10 @@ a {
   outline-offset: 2px;
   border-radius: 4px;
 }
-.icon {
+.icon,
+.lucide,
+[data-lucide],
+i[data-lucide] {
   width: 20px;
   height: 20px;
   flex: none;
@@ -225,6 +228,9 @@ a {
   place-items: center;
   flex: none;
 }
+.brand-mark .lucide,
+.brand-mark .icon,
+.brand-mark .lucide,
 .brand-mark svg {
   width: 18px;
   height: 18px;
@@ -280,7 +286,8 @@ a {
 .nav-item.active .icon {
   color: #4ade80;
 }
-.nav-item .icon {
+.nav-item .icon,
+.nav-item .lucide {
   width: 19px;
   height: 19px;
 }
@@ -379,7 +386,8 @@ a {
   position: relative;
   display: block;
 }
-.search .icon {
+.search .icon,
+.search .lucide {
   position: absolute;
   left: 12px;
   top: 50%;
@@ -418,7 +426,8 @@ a {
   color: var(--text);
   border-color: var(--border-strong);
 }
-.icon-btn .icon {
+.icon-btn .icon,
+.icon-btn .lucide {
   width: 18px;
   height: 18px;
 }
@@ -504,7 +513,9 @@ a {
 .popover-item:hover {
   background: var(--bg);
 }
-.popover-item .icon {
+.popover-item .icon,
+.popover-item .lucide,
+.popover-item svg {
   width: 17px;
   height: 17px;
   margin-top: 2px;
@@ -649,7 +660,9 @@ a {
 .btn:active {
   transform: translateY(0.5px);
 }
-.btn .icon {
+.btn .icon,
+.btn .lucide,
+.btn svg {
   width: 17px;
   height: 17px;
 }
@@ -865,7 +878,9 @@ a {
   display: grid;
   place-items: center;
 }
-.chip .icon {
+.chip .icon,
+.chip .lucide,
+.chip svg {
   width: 19px;
   height: 19px;
 }
@@ -905,7 +920,9 @@ a {
   font-weight: 600;
   white-space: nowrap;
 }
-.badge .icon {
+.badge .icon,
+.badge .lucide,
+.badge svg {
   width: 12px;
   height: 12px;
 }
@@ -934,7 +951,9 @@ a {
   font-size: 13px;
   font-weight: 600;
 }
-.delta .icon {
+.delta .icon,
+.delta .lucide,
+.delta svg {
   width: 14px;
   height: 14px;
 }
@@ -1232,7 +1251,9 @@ th.num {
   place-items: center;
   flex: none;
 }
-.tx-icon .icon {
+.tx-icon .icon,
+.tx-icon .lucide,
+.tx-icon svg {
   width: 18px;
   height: 18px;
 }
@@ -1393,7 +1414,9 @@ th.num {
   place-items: center;
   margin-bottom: 2px;
 }
-.empty .empty-icon .icon {
+.empty .empty-icon .icon,
+.empty .empty-icon .lucide,
+.empty .empty-icon svg {
   width: 24px;
   height: 24px;
 }
@@ -1532,7 +1555,9 @@ th.num {
 .toast.warn {
   border-left-color: var(--amber);
 }
-.toast .icon {
+.toast .icon,
+.toast .lucide,
+.toast svg {
   width: 18px;
   height: 18px;
   margin-top: 1px;
