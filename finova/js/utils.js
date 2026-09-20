@@ -176,3 +176,29 @@ function greeting() {
   if (h < 18) return "Good afternoon";
   return "Good evening";
 }
+
+Object.assign(globalThis, {
+  $,
+  $$,
+  esc,
+  round2,
+  parseISO,
+  toISO,
+  daysInMonth,
+  todayISO,
+  fmtDate,
+  fmtDateShort,
+  currentMonthKey,
+  prevMonthKey,
+  monthLabel,
+  monthLabelLong,
+  lastMonthKeys,
+  currencySymbol,
+  money,
+  compactMoney,
+  hexToRgba,
+  cssVar,
+  debounce,
+  uid,
+  greeting,
+});

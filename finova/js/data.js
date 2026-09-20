@@ -449,3 +449,23 @@ function pctChange(current, previous) {
   if (!previous) return current > 0 ? 100 : 0;
   return ((current - previous) / Math.abs(previous)) * 100;
 }
+
+Object.assign(globalThis, {
+  STORAGE_KEY,
+  OPENING_BALANCE,
+  INCOME_CATEGORY,
+  DEFAULT_CATEGORIES,
+  FALLBACK_CATEGORY,
+  seedTransactions,
+  defaultData,
+  Store,
+  getCategory,
+  allCategories,
+  txInMonth,
+  sumByType,
+  totalBalance,
+  balanceAtMonthEnd,
+  monthlySeries,
+  categoryBreakdown,
+  pctChange,
+});

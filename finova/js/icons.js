@@ -87,14 +87,18 @@ function icon(name, cls) {
   }
 }
 
-if (
-  typeof window !== "undefined" &&
-  window.lucide &&
-  typeof window.lucide.createIcons === "function"
-) {
+if (typeof window !== "undefined" && window.lucide) {
   window.addEventListener("DOMContentLoaded", () => {
-    window.lucide.createIcons({
-      attrs: { class: "icon" },
-    });
+    if (typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons({
+        attrs: { class: "icon" },
+      });
+    }
   });
 }
+
+Object.assign(globalThis, {
+  LUCIDE_ICON_MAP,
+  toPascalCase,
+  icon,
+});

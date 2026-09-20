@@ -17,6 +17,15 @@ const ui = {
   reportRange: 6,
 };
 
+Object.assign(globalThis, {
+  ui,
+  render,
+  navigate,
+  applyTheme,
+  syncProfileUI,
+  toggleTheme,
+});
+
 /* ---------- Theme ---------- */
 function applyTheme() {
   const theme = (Store.data && Store.data.settings.theme) || "light";

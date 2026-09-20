@@ -36,22 +36,22 @@ function deltaHTML(current, previous, invert) {
 function statCard(cfg) {
   return (
     "" +
-    '<div class="card stat">' +
-    '<div class="stat-top">' +
-    '<span class="stat-label">' +
+    '<div class="card stat rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">' +
+    '<div class="stat-top flex items-start justify-between gap-3">' +
+    '<span class="stat-label text-[13px] font-medium text-[var(--text-2)]">' +
     esc(cfg.label) +
     "</span>" +
     '<span class="chip ' +
     cfg.chip +
-    '">' +
+    ' flex h-10 w-10 items-center justify-center rounded-xl">' +
     icon(cfg.icon) +
     "</span>" +
     "</div>" +
-    '<div class="stat-value">' +
+    '<div class="stat-value text-[28px] font-bold tracking-[-0.03em] text-[var(--text)]">' +
     esc(cfg.value) +
     "</div>" +
     (cfg.delta
-      ? '<div class="stat-foot">' +
+      ? '<div class="stat-foot flex items-center gap-2 text-sm text-[var(--text-2)]">' +
         cfg.delta +
         '<span class="small muted">vs last month</span></div>'
       : "") +
@@ -61,14 +61,14 @@ function statCard(cfg) {
 
 function emptyState(title, message, iconName) {
   return (
-    '<div class="empty">' +
-    '<div class="empty-icon">' +
+    '<div class="empty flex flex-col items-center justify-center gap-3 py-14 text-center">' +
+    '<div class="empty-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--bg)] text-[var(--text-3)]">' +
     icon(iconName || "inbox") +
     "</div>" +
-    "<h3>" +
+    '<h3 class="text-[15px] font-semibold text-[var(--text)]">' +
     esc(title) +
     "</h3>" +
-    "<p>" +
+    '<p class="max-w-[330px] text-[13.5px] text-[var(--text-2)]">' +
     esc(message) +
     "</p>" +
     "</div>"
@@ -174,18 +174,18 @@ function viewDashboard() {
 
   /* Header */
   html +=
-    '<div class="page-head">' +
+    '<div class="page-head flex flex-wrap items-end justify-between gap-5">' +
     "<div>" +
-    '<h2 class="page-title">' +
+    '<h2 class="page-title text-[32px] font-bold tracking-[-0.025em] text-[var(--text)]">' +
     greeting() +
     ", " +
     esc((profile.name || "there").split(" ")[0]) +
     "</h2>" +
-    '<p class="page-sub">Here\u2019s your financial overview for ' +
+    '<p class="page-sub mt-1.5 text-[15px] text-[var(--text-2)]">Here\u2019s your financial overview for ' +
     monthLabelLong(mk) +
     ".</p>" +
     "</div>" +
-    '<button class="btn btn-primary" type="button" data-action="add-tx">' +
+    '<button class="btn btn-primary inline-flex items-center gap-2 rounded-lg bg-[var(--green)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--green-hover)]" type="button" data-action="add-tx">' +
     icon("plus") +
     "Add Transaction</button>" +
     "</div>";
@@ -443,21 +443,21 @@ function viewTransactions() {
   let html = "";
 
   html +=
-    '<div class="page-head">' +
+    '<div class="page-head flex flex-wrap items-end justify-between gap-5">' +
     "<div>" +
-    '<h2 class="page-title">Transactions</h2>' +
-    '<p class="page-sub">Manage, filter and review every transaction on your account.</p>' +
+    '<h2 class="page-title text-[32px] font-bold tracking-[-0.025em] text-[var(--text)]">Transactions</h2>' +
+    '<p class="page-sub mt-1.5 text-[15px] text-[var(--text-2)]">Manage, filter and review every transaction on your account.</p>' +
     "</div>" +
-    '<button class="btn btn-primary" type="button" data-action="add-tx">' +
+    '<button class="btn btn-primary inline-flex items-center gap-2 rounded-lg bg-[var(--green)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--green-hover)]" type="button" data-action="add-tx">' +
     icon("plus") +
     "Add Transaction</button>" +
     "</div>";
 
   html +=
-    '<div class="card filter-bar" style="margin-bottom:20px;">' +
-    '<div class="search">' +
+    '<div class="card filter-bar mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm" style="margin-bottom:20px;">' +
+    '<div class="search relative flex-1 min-w-[180px]">' +
     icon("search") +
-    '<input class="input" id="txSearch" type="search" placeholder="Search by name, note or category…" value="' +
+    '<input class="input h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] pl-10 text-sm text-[var(--text)] placeholder:text-[var(--text-3)]" id="txSearch" type="search" placeholder="Search by name, note or category…" value="' +
     esc(ui.tx.q) +
     '" aria-label="Search transactions">' +
     "</div>" +
@@ -1030,3 +1030,24 @@ const AFTER = {
   transactions: afterTransactions,
   reports: afterReports,
 };
+
+Object.assign(globalThis, {
+  PAGE_TITLES,
+  deltaHTML,
+  statCard,
+  emptyState,
+  txRowHTML,
+  viewDashboard,
+  afterDashboard,
+  filteredTransactions,
+  txTableHTML,
+  viewTransactions,
+  afterTransactions,
+  viewCategories,
+  viewReports,
+  afterReports,
+  viewSettings,
+  skeletonView,
+  VIEWS,
+  AFTER,
+});

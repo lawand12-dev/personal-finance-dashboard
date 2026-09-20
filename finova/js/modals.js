@@ -97,6 +97,35 @@ function closeModal() {
   document.body.style.overflow = "";
 }
 
+function confirmCategoryModal(cat) {
+  const name = cat ? cat.name : "this category";
+  const count = cat ? Store.categoryCount(cat.id) : 0;
+
+  return confirmDialog({
+    title: 'Delete "' + name + '"?',
+    message:
+      count > 0
+        ? count +
+          " transaction" +
+          (count === 1 ? "" : "s") +
+          " will become uncategorized. This cannot be undone."
+        : "This category will be permanently removed.",
+    confirmText: "Delete category",
+    danger: true,
+  });
+}
+
+Object.assign(globalThis, {
+  toast,
+  confirmDialog,
+  openModal,
+  closeModal,
+  categoryOptionsHTML,
+  openTransactionModal,
+  openCategoryModal,
+  confirmCategoryModal,
+});
+
 /* ---------- Transaction modal ---------- */
 function categoryOptionsHTML(type, selected) {
   if (type === "income") {

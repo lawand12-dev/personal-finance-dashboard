@@ -294,6 +294,17 @@ function renderAreaChart(container, config) {
 }
 
 /* ---------- Grouped bar chart ---------- */
+Object.assign(globalThis, {
+  chartRegistry,
+  registerChart,
+  redrawCharts,
+  niceMax,
+  smoothPath,
+  renderAreaChart,
+  renderBarChart,
+  renderDonut,
+});
+
 function renderBarChart(container, config) {
   if (!container) return;
   const labels = config.labels;
