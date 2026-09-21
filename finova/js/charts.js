@@ -103,9 +103,7 @@ function renderAreaChart(container, config) {
     const steps = 4;
 
     const xAt = (i) =>
-      labels.length === 1
-        ? pad.l + iw / 2
-        : pad.l + (i * iw) / (labels.length - 1);
+      labels.length === 1 ? pad.l + iw / 2 : pad.l + (i * iw) / (labels.length - 1);
     const yAt = (v) => pad.t + ih - (Math.max(0, v) / top) * ih;
 
     const gridColor = cssVar("--border");
@@ -169,8 +167,7 @@ function renderAreaChart(container, config) {
 
     labels.forEach((lab, i) => {
       const step = labels.length > 8 ? 2 : 1;
-      if (labels.length > 8 && i % step !== 0 && i !== labels.length - 1)
-        return;
+      if (labels.length > 8 && i % step !== 0 && i !== labels.length - 1) return;
       svg +=
         '<text x="' +
         xAt(i).toFixed(1) +
@@ -197,14 +194,7 @@ function renderAreaChart(container, config) {
         "," +
         (pad.t + ih) +
         " Z";
-      svg +=
-        '<path d="' +
-        area +
-        '" fill="url(#' +
-        chartId +
-        "-g" +
-        si +
-        ')" stroke="none"/>';
+      svg += '<path d="' + area + '" fill="url(#' + chartId + "-g" + si + ')" stroke="none"/>';
       svg +=
         '<path d="' +
         line +
@@ -425,8 +415,7 @@ function renderBarChart(container, config) {
           "</title></path>";
       });
       const step = labels.length > 8 ? 2 : 1;
-      if (labels.length > 8 && i % step !== 0 && i !== labels.length - 1)
-        return;
+      if (labels.length > 8 && i % step !== 0 && i !== labels.length - 1) return;
       svg +=
         '<text x="' +
         (bandX + band / 2).toFixed(1) +

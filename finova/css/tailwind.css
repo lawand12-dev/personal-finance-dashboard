@@ -49,9 +49,7 @@
     --r-md: 12px;
     --r-lg: 16px;
     --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
-    --shadow-md:
-      0 4px 16px -2px rgba(16, 24, 40, 0.08),
-      0 2px 6px -2px rgba(16, 24, 40, 0.05);
+    --shadow-md: 0 4px 16px -2px rgba(16, 24, 40, 0.08), 0 2px 6px -2px rgba(16, 24, 40, 0.05);
     --shadow-lg: 0 24px 48px -12px rgba(16, 24, 40, 0.28);
   }
 

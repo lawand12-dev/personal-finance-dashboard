@@ -229,15 +229,9 @@ function openTransactionModal(tx) {
     const btn = e.target.closest(".seg");
     if (!btn) return;
     currentType = btn.dataset.type;
-    $$(".seg", typeWrap).forEach((b) =>
-      b.classList.toggle("active", b === btn),
-    );
+    $$(".seg", typeWrap).forEach((b) => b.classList.toggle("active", b === btn));
     const keep =
-      currentType === "income"
-        ? "income"
-        : catSelect.value === "income"
-          ? null
-          : catSelect.value;
+      currentType === "income" ? "income" : catSelect.value === "income" ? null : catSelect.value;
     catSelect.innerHTML = categoryOptionsHTML(currentType, keep);
   });
 
@@ -268,9 +262,7 @@ function openTransactionModal(tx) {
     setErr("Name", name ? "" : "Please enter a transaction name.");
     setErr(
       "Amount",
-      !amountRaw || isNaN(amount) || amount <= 0
-        ? "Enter an amount greater than zero."
-        : "",
+      !amountRaw || isNaN(amount) || amount <= 0 ? "Enter an amount greater than zero." : "",
     );
     setErr("Date", date ? "" : "Please choose a date.");
 
@@ -416,8 +408,7 @@ function openCategoryModal(cat) {
     selectedColor = b.dataset.color;
     $$(".color-swatch", colorRow).forEach((s) => {
       s.style.border =
-        "2px solid " +
-        (s.dataset.color === selectedColor ? "var(--text)" : "transparent");
+        "2px solid " + (s.dataset.color === selectedColor ? "var(--text)" : "transparent");
     });
   });
 
@@ -445,9 +436,7 @@ function openCategoryModal(cat) {
       return;
     }
     const dupe = Store.data.categories.some(
-      (c) =>
-        c.name.toLowerCase() === name.toLowerCase() &&
-        (!isEdit || c.id !== cat.id),
+      (c) => c.name.toLowerCase() === name.toLowerCase() && (!isEdit || c.id !== cat.id),
     );
     if (dupe) {
       $("#catName").classList.add("invalid");

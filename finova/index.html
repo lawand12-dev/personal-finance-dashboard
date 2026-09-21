@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FINOVA — Personal Finance Dashboard</title>
-    <meta
-      name="description"
-      content="FINOVA — a calm, professional personal finance dashboard."
-    />
+    <meta name="description" content="FINOVA — a calm, professional personal finance dashboard." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,18 +26,12 @@
         >
           <i data-lucide="trending-up"></i>
         </span>
-        <span
-          class="brand-name text-base font-extrabold tracking-[0.12em] text-white"
-        >
+        <span class="brand-name text-base font-extrabold tracking-[0.12em] text-white">
           FINOVA
         </span>
       </div>
 
-      <nav
-        class="nav flex flex-col gap-1"
-        id="nav"
-        aria-label="Main navigation"
-      >
+      <nav class="nav flex flex-col gap-1" id="nav" aria-label="Main navigation">
         <button
           class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
           data-view="dashboard"
@@ -83,22 +74,14 @@
         </button>
       </nav>
 
-      <div
-        class="sidebar-foot mt-auto border-t border-[var(--sidebar-border)] pt-3"
-      >
+      <div class="sidebar-foot mt-auto border-t border-[var(--sidebar-border)] pt-3">
         <div
           class="user-card flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 transition hover:bg-white/5"
         >
           <span class="avatar" id="sidebarAvatar"></span>
           <span class="user-meta flex min-w-0 flex-col">
-            <span
-              class="user-name text-sm font-semibold text-white"
-              id="sidebarName"
-            ></span>
-            <span
-              class="user-mail text-[11px] text-slate-400"
-              id="sidebarMail"
-            ></span>
+            <span class="user-name text-sm font-semibold text-white" id="sidebarName"></span>
+            <span class="user-mail text-[11px] text-slate-400" id="sidebarMail"></span>
           </span>
         </div>
         <button
@@ -118,12 +101,7 @@
       <header
         class="topbar sticky top-0 z-40 flex h-[var(--topbar-h)] items-center gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-7 text-[var(--text)]"
       >
-        <button
-          class="icon-btn menu-btn"
-          id="menuBtn"
-          type="button"
-          aria-label="Open navigation"
-        >
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open navigation">
           <i data-lucide="menu"></i>
         </button>
 
@@ -151,12 +129,7 @@
           >
             <i data-lucide="bell"></i>
           </button>
-          <div
-            class="popover"
-            id="notifPop"
-            role="dialog"
-            aria-label="Notifications"
-          >
+          <div class="popover" id="notifPop" role="dialog" aria-label="Notifications">
             <div class="popover-head">
               <span class="popover-title">Notifications</span>
               <span class="badge badge-gray"></span>
@@ -185,19 +158,9 @@
           </div>
         </div>
 
-        <button
-          class="icon-btn"
-          id="themeBtn"
-          type="button"
-          aria-label="Toggle dark mode"
-        ></button>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle dark mode"></button>
 
-        <button
-          class="icon-btn"
-          id="profileBtn"
-          type="button"
-          aria-label="Account"
-        >
+        <button class="icon-btn" id="profileBtn" type="button" aria-label="Account">
           <span class="avatar sm" id="topAvatar">AR</span>
         </button>
       </header>
@@ -215,20 +178,10 @@
     </div>
 
     <div class="modal-backdrop" id="confirmBackdrop" aria-hidden="true">
-      <div
-        class="modal sm"
-        id="confirmModal"
-        role="alertdialog"
-        aria-modal="true"
-      ></div>
+      <div class="modal sm" id="confirmModal" role="alertdialog" aria-modal="true"></div>
     </div>
 
-    <div
-      class="toasts"
-      id="toasts"
-      aria-live="polite"
-      aria-atomic="false"
-    ></div>
+    <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
 
     <!-- ============================ SCRIPTS ============================ -->
     <script type="module" src="js/main.js"></script>

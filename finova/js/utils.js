@@ -10,10 +10,7 @@ const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
 function esc(s) {
   return String(s == null ? "" : s).replace(
     /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ],
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
   );
 }
 function round2(n) {
@@ -87,21 +84,13 @@ function lastMonthKeys(n) {
 }
 
 function currencySymbol() {
-  const c =
-    (Store.data && Store.data.settings && Store.data.settings.currency) ||
-    "USD";
-  return (
-    { USD: "$", EUR: "€", GBP: "£", INR: "₹", JPY: "¥", CAD: "C$", AUD: "A$" }[
-      c
-    ] || "$"
-  );
+  const c = (Store.data && Store.data.settings && Store.data.settings.currency) || "USD";
+  return { USD: "$", EUR: "€", GBP: "£", INR: "₹", JPY: "¥", CAD: "C$", AUD: "A$" }[c] || "$";
 }
 function money(n, opts) {
   opts = opts || {};
   const cents = opts.cents !== false;
-  const cur =
-    (Store.data && Store.data.settings && Store.data.settings.currency) ||
-    "USD";
+  const cur = (Store.data && Store.data.settings && Store.data.settings.currency) || "USD";
   const abs = Math.abs(Number(n) || 0);
   let str;
   try {
@@ -136,21 +125,11 @@ function hexToRgba(hex, a) {
       .join("");
   const num = parseInt(h, 16);
   return (
-    "rgba(" +
-    ((num >> 16) & 255) +
-    "," +
-    ((num >> 8) & 255) +
-    "," +
-    (num & 255) +
-    "," +
-    a +
-    ")"
+    "rgba(" + ((num >> 16) & 255) + "," + ((num >> 8) & 255) + "," + (num & 255) + "," + a + ")"
   );
 }
 function cssVar(name) {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
 function debounce(fn, wait) {
@@ -163,12 +142,7 @@ function debounce(fn, wait) {
   };
 }
 function uid() {
-  return (
-    "tx_" +
-    Date.now().toString(36) +
-    "_" +
-    Math.random().toString(36).slice(2, 7)
-  );
+  return "tx_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
 }
 function greeting() {
   const h = new Date().getHours();

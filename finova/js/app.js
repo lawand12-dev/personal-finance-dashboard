@@ -41,8 +41,7 @@ function applyTheme() {
 }
 
 function toggleTheme() {
-  Store.data.settings.theme =
-    Store.data.settings.theme === "dark" ? "light" : "dark";
+  Store.data.settings.theme = Store.data.settings.theme === "dark" ? "light" : "dark";
   Store.save();
   applyTheme();
   redrawCharts();
@@ -117,11 +116,7 @@ document.addEventListener("click", async (e) => {
   const target = e.target.closest("[data-action], [data-view]");
   if (!target) {
     const pop = $("#notifPop");
-    if (
-      pop &&
-      pop.classList.contains("open") &&
-      !e.target.closest("#notifBtn")
-    ) {
+    if (pop && pop.classList.contains("open") && !e.target.closest("#notifBtn")) {
       pop.classList.remove("open");
       $("#notifBtn").setAttribute("aria-expanded", "false");
     }
@@ -311,12 +306,10 @@ document.addEventListener("click", async (e) => {
     case "logout": {
       const ok = await confirmDialog({
         title: "Log out?",
-        message:
-          "This is a front-end demo — your data stays safely in this browser.",
+        message: "This is a front-end demo — your data stays safely in this browser.",
         confirmText: "Log out",
       });
-      if (ok)
-        toast("You have been logged out (demo only).", "success", "Goodbye");
+      if (ok) toast("You have been logged out (demo only).", "success", "Goodbye");
       break;
     }
   }
@@ -424,10 +417,7 @@ function boot() {
 
     if (!Store._memOnly && !localStorage.getItem(STORAGE_KEY + ".init")) {
       try {
-        if (
-          window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches
-        ) {
+        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
           Store.data.settings.theme = "dark";
           Store.save();
         }

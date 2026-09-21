@@ -16,13 +16,11 @@ const PAGE_TITLES = {
 /* ---------- Shared fragments ---------- */
 function deltaHTML(current, previous, invert) {
   const change = pctChange(current, previous);
-  if (!isFinite(change))
-    return '<span class="delta flat">' + icon("minus", "icon-sm") + "—</span>";
+  if (!isFinite(change)) return '<span class="delta flat">' + icon("minus", "icon-sm") + "—</span>";
   const up = change >= 0;
   const good = invert ? !up : up;
   const cls = Math.abs(change) < 0.05 ? "flat" : good ? "up" : "down";
-  const arrow =
-    Math.abs(change) < 0.05 ? "minus" : up ? "arrowUpRight" : "arrowDownRight";
+  const arrow = Math.abs(change) < 0.05 ? "minus" : up ? "arrowUpRight" : "arrowDownRight";
   return (
     '<span class="delta ' +
     cls +
@@ -82,12 +80,8 @@ function txRowHTML(t, opts) {
   const soft = hexToRgba(cat.color, 0.13);
   const statusBadge =
     t.status === "pending"
-      ? '<span class="badge badge-amber">' +
-        icon("clock", "icon-sm") +
-        "Pending</span>"
-      : '<span class="badge badge-green">' +
-        icon("check", "icon-sm") +
-        "Completed</span>";
+      ? '<span class="badge badge-amber">' + icon("clock", "icon-sm") + "Pending</span>"
+      : '<span class="badge badge-green">' + icon("check", "icon-sm") + "Completed</span>";
 
   return (
     "" +
@@ -285,9 +279,7 @@ function viewDashboard() {
       "<thead><tr>" +
       '<th>Transaction</th><th>Category</th><th>Date</th><th class="num">Amount</th><th>Status</th>' +
       "</tr></thead><tbody>" +
-      recent
-        .map((t) => txRowHTML(t, { short: true, showStatus: true }))
-        .join("") +
+      recent.map((t) => txRowHTML(t, { short: true, showStatus: true })).join("") +
       "</tbody></table></div>";
   }
   html += "</div>";
@@ -369,28 +361,17 @@ function filteredTransactions() {
         getCategory(t.category).name.toLowerCase().indexOf(q) > -1,
     );
   }
-  if (f.category !== "all")
-    list = list.filter((t) => t.category === f.category);
+  if (f.category !== "all") list = list.filter((t) => t.category === f.category);
   if (f.type !== "all") list = list.filter((t) => t.type === f.type);
 
   if (f.range !== "all") {
     let from = null;
     if (f.range === "7d")
-      from = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() - 6,
-      );
+      from = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6);
     if (f.range === "30d")
-      from = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() - 29,
-      );
-    if (f.range === "month")
-      from = new Date(today.getFullYear(), today.getMonth(), 1);
-    if (f.range === "3m")
-      from = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+      from = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29);
+    if (f.range === "month") from = new Date(today.getFullYear(), today.getMonth(), 1);
+    if (f.range === "3m") from = new Date(today.getFullYear(), today.getMonth() - 2, 1);
     if (f.range === "year") from = new Date(today.getFullYear(), 0, 1);
     if (from) list = list.filter((t) => parseISO(t.date) >= from);
   }
@@ -414,9 +395,7 @@ function txTableHTML() {
     "<thead><tr>" +
     '<th>Name</th><th>Category</th><th>Date</th><th>Type</th><th class="num">Amount</th><th style="text-align:right">Actions</th>' +
     "</tr></thead><tbody>" +
-    visible
-      .map((t) => txRowHTML(t, { showType: true, showActions: true }))
-      .join("") +
+    visible.map((t) => txRowHTML(t, { showType: true, showActions: true })).join("") +
     "</tbody></table></div>";
 
   html +=
@@ -471,9 +450,7 @@ function viewTransactions() {
     "</select>" +
     '<select class="select" id="fCategory" aria-label="Category">' +
     '<option value="all">All categories</option>' +
-    cats
-      .map((c) => '<option value="' + c.id + '">' + esc(c.name) + "</option>")
-      .join("") +
+    cats.map((c) => '<option value="' + c.id + '">' + esc(c.name) + "</option>").join("") +
     '<option value="income">Income</option>' +
     "</select>" +
     '<select class="select" id="fType" aria-label="Type">' +
@@ -566,9 +543,7 @@ function viewCategories() {
     const pct = budget > 0 ? (spent / budget) * 100 : 0;
     const barCls = pct >= 100 ? "over" : pct >= 80 ? "warn" : "";
     const remaining = budget - spent;
-    const count = Store.data.transactions.filter(
-      (t) => t.category === c.id,
-    ).length;
+    const count = Store.data.transactions.filter((t) => t.category === c.id).length;
 
     html +=
       '<div class="card cat-card">' +

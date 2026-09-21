@@ -87,61 +87,17 @@ function seedTransactions() {
   }
 
   for (let m = 0; m < 12; m++) {
-    const base = new Date(
-      startMonth.getFullYear(),
-      startMonth.getMonth() + m,
-      1,
-    );
+    const base = new Date(startMonth.getFullYear(), startMonth.getMonth() + m, 1);
     const y = base.getFullYear();
     const mo = base.getMonth();
     const dim = daysInMonth(y, mo);
     const D = (day) => new Date(y, mo, Math.min(day, dim));
 
-    push(
-      "Salary",
-      "income",
-      "income",
-      4850,
-      D(1),
-      "completed",
-      "Monthly salary — Nova Labs",
-    );
-    push(
-      "Rent Payment",
-      "housing",
-      "expense",
-      1450,
-      D(3),
-      "completed",
-      "Apartment rent",
-    );
-    push(
-      "Groceries",
-      "food",
-      "expense",
-      rnd(92, 148),
-      D(5),
-      "completed",
-      "Whole Foods Market",
-    );
-    push(
-      "Coffee Shop",
-      "food",
-      "expense",
-      rnd(4.5, 7.4),
-      D(7),
-      "completed",
-      "Blue Bottle Coffee",
-    );
-    push(
-      "Netflix",
-      "entertainment",
-      "expense",
-      15.49,
-      D(8),
-      "completed",
-      "Standard plan",
-    );
+    push("Salary", "income", "income", 4850, D(1), "completed", "Monthly salary — Nova Labs");
+    push("Rent Payment", "housing", "expense", 1450, D(3), "completed", "Apartment rent");
+    push("Groceries", "food", "expense", rnd(92, 148), D(5), "completed", "Whole Foods Market");
+    push("Coffee Shop", "food", "expense", rnd(4.5, 7.4), D(7), "completed", "Blue Bottle Coffee");
+    push("Netflix", "entertainment", "expense", 15.49, D(8), "completed", "Standard plan");
     push(
       "Electricity Bill",
       "utilities",
@@ -151,15 +107,7 @@ function seedTransactions() {
       "completed",
       "City Power & Light",
     );
-    push(
-      "Uber",
-      "transport",
-      "expense",
-      rnd(14, 34),
-      D(14),
-      "completed",
-      "Ride to downtown",
-    );
+    push("Uber", "transport", "expense", rnd(14, 34), D(14), "completed", "Ride to downtown");
     push(
       "Freelance Project",
       "income",
@@ -169,100 +117,19 @@ function seedTransactions() {
       "completed",
       "Design retainer",
     );
-    push(
-      "Groceries",
-      "food",
-      "expense",
-      rnd(62, 112),
-      D(17),
-      "completed",
-      "Trader Joe's",
-    );
-    push(
-      "Internet",
-      "utilities",
-      "expense",
-      59.99,
-      D(18),
-      "completed",
-      "Fiber 500 plan",
-    );
-    push(
-      "Shopping",
-      "shopping",
-      "expense",
-      rnd(42, 186),
-      D(20),
-      "completed",
-      "Amazon order",
-    );
-    push(
-      "Gas Station",
-      "transport",
-      "expense",
-      rnd(38, 64),
-      D(22),
-      "completed",
-      "Shell",
-    );
-    push(
-      "Spotify",
-      "entertainment",
-      "expense",
-      9.99,
-      D(24),
-      "completed",
-      "Premium subscription",
-    );
-    push(
-      "Groceries",
-      "food",
-      "expense",
-      rnd(70, 122),
-      D(26),
-      "completed",
-      "Costco run",
-    );
-    push(
-      "Restaurant",
-      "food",
-      "expense",
-      rnd(28, 74),
-      D(27),
-      "completed",
-      "Dinner with friends",
-    );
+    push("Groceries", "food", "expense", rnd(62, 112), D(17), "completed", "Trader Joe's");
+    push("Internet", "utilities", "expense", 59.99, D(18), "completed", "Fiber 500 plan");
+    push("Shopping", "shopping", "expense", rnd(42, 186), D(20), "completed", "Amazon order");
+    push("Gas Station", "transport", "expense", rnd(38, 64), D(22), "completed", "Shell");
+    push("Spotify", "entertainment", "expense", 9.99, D(24), "completed", "Premium subscription");
+    push("Groceries", "food", "expense", rnd(70, 122), D(26), "completed", "Costco run");
+    push("Restaurant", "food", "expense", rnd(28, 74), D(27), "completed", "Dinner with friends");
   }
 
-  const daysAgo = (k) =>
-    new Date(today.getFullYear(), today.getMonth(), today.getDate() - k);
-  push(
-    "Amazon Order",
-    "shopping",
-    "expense",
-    89.99,
-    daysAgo(1),
-    "pending",
-    "Awaiting clearance",
-  );
-  push(
-    "Coffee Shop",
-    "food",
-    "expense",
-    5.4,
-    daysAgo(0),
-    "completed",
-    "Morning coffee",
-  );
-  push(
-    "Uber",
-    "transport",
-    "expense",
-    18.75,
-    daysAgo(2),
-    "completed",
-    "Airport ride",
-  );
+  const daysAgo = (k) => new Date(today.getFullYear(), today.getMonth(), today.getDate() - k);
+  push("Amazon Order", "shopping", "expense", 89.99, daysAgo(1), "pending", "Awaiting clearance");
+  push("Coffee Shop", "food", "expense", 5.4, daysAgo(0), "completed", "Morning coffee");
+  push("Uber", "transport", "expense", 18.75, daysAgo(2), "completed", "Airport ride");
 
   out.sort((a, b) => b.date.localeCompare(a.date));
   return out;
@@ -313,11 +180,7 @@ const Store = {
       this.save();
     }
     const d = defaultData();
-    this.data.settings = Object.assign(
-      {},
-      d.settings,
-      this.data.settings || {},
-    );
+    this.data.settings = Object.assign({}, d.settings, this.data.settings || {});
     this.data.profile = Object.assign({}, d.profile, this.data.profile || {});
   },
 
@@ -350,11 +213,7 @@ const Store = {
   updateTransaction(id, patch) {
     const i = this.data.transactions.findIndex((t) => t.id === id);
     if (i > -1) {
-      this.data.transactions[i] = Object.assign(
-        {},
-        this.data.transactions[i],
-        patch,
-      );
+      this.data.transactions[i] = Object.assign({}, this.data.transactions[i], patch);
       this.data.transactions.sort((a, b) => b.date.localeCompare(a.date));
       this.save();
     }
