@@ -13,15 +13,15 @@
     />
     <link rel="stylesheet" href="css/tailwind.css" />
   </head>
-  <body class="bg-[var(--bg)] text-[var(--text)] antialiased">
+  <body class="bg-bg text-text antialiased">
     <!-- ============================ SIDEBAR ============================ -->
     <aside
-      class="sidebar fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-w)] flex-col border-r border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] p-5 text-[var(--sidebar-text)]"
+      class="sidebar fixed inset-y-0 left-0 z-50 flex w-[var(--sidebar-w)] flex-col border-r border-sidebar-border bg-sidebar-bg p-5 text-sidebar-text"
       id="sidebar"
     >
       <div class="brand flex items-center gap-2.5 pb-6">
         <span
-          class="brand-mark grid h-8 w-8 place-items-center rounded-lg bg-[var(--green)] text-white"
+          class="brand-mark grid h-8 w-8 place-items-center rounded-lg bg-green text-white"
           aria-hidden="true"
         >
           <i data-lucide="trending-up"></i>
@@ -33,7 +33,7 @@
 
       <nav class="nav flex flex-col gap-1" id="nav" aria-label="Main navigation">
         <button
-          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
+          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-sidebar-text transition hover:bg-white/5 hover:text-white"
           data-view="dashboard"
           type="button"
         >
@@ -41,7 +41,7 @@
           <span class="nav-label">Dashboard</span>
         </button>
         <button
-          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
+          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-sidebar-text transition hover:bg-white/5 hover:text-white"
           data-view="transactions"
           type="button"
         >
@@ -49,7 +49,7 @@
           <span class="nav-label">Transactions</span>
         </button>
         <button
-          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
+          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-sidebar-text transition hover:bg-white/5 hover:text-white"
           data-view="categories"
           type="button"
         >
@@ -57,7 +57,7 @@
           <span class="nav-label">Categories</span>
         </button>
         <button
-          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
+          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-sidebar-text transition hover:bg-white/5 hover:text-white"
           data-view="reports"
           type="button"
         >
@@ -65,7 +65,7 @@
           <span class="nav-label">Reports</span>
         </button>
         <button
-          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
+          class="nav-item flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-sidebar-text transition hover:bg-white/5 hover:text-white"
           data-view="settings"
           type="button"
         >
@@ -74,7 +74,7 @@
         </button>
       </nav>
 
-      <div class="sidebar-foot mt-auto border-t border-[var(--sidebar-border)] pt-3">
+      <div class="sidebar-foot mt-auto border-t border-sidebar-border pt-3">
         <div
           class="user-card flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 transition hover:bg-white/5"
         >
@@ -85,7 +85,7 @@
           </span>
         </div>
         <button
-          class="nav-item mt-1 flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-[var(--sidebar-text)] transition hover:bg-white/5 hover:text-white"
+          class="nav-item mt-1 flex w-full items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2.5 text-left text-sidebar-text transition hover:bg-white/5 hover:text-white"
           data-action="logout"
           type="button"
         >
@@ -99,7 +99,7 @@
     <!-- ============================ MAIN ============================ -->
     <div class="main flex min-h-screen flex-col">
       <header
-        class="topbar sticky top-0 z-40 flex h-[var(--topbar-h)] items-center gap-3 border-b border-[var(--border)] bg-[var(--surface)] px-7 text-[var(--text)]"
+        class="topbar sticky top-0 z-40 flex h-[var(--topbar-h)] items-center gap-3 border-b border-border bg-surface px-7 text-text"
       >
         <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open navigation">
           <i data-lucide="menu"></i>
@@ -135,21 +135,21 @@
               <span class="badge badge-gray"></span>
             </div>
             <div class="popover-item">
-              <i data-lucide="triangle-alert" style="color: var(--amber)"></i>
+              <i data-lucide="triangle-alert" class="text-amber"></i>
               <div>
                 <p></p>
                 <span></span>
               </div>
             </div>
             <div class="popover-item">
-              <i data-lucide="check" style="color: var(--green)"></i>
+              <i data-lucide="check" class="text-green"></i>
               <div>
                 <p></p>
                 <span></span>
               </div>
             </div>
             <div class="popover-item">
-              <i data-lucide="bar-chart-3" style="color: var(--blue-text)"></i>
+              <i data-lucide="bar-chart-3" class="text-blue-text"></i>
               <div>
                 <p></p>
                 <span></span>

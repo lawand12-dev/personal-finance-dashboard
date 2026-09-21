@@ -34,9 +34,9 @@ function deltaHTML(current, previous, invert) {
 function statCard(cfg) {
   return (
     "" +
-    '<div class="card stat rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">' +
+    '<div class="card stat rounded-xl border border-border bg-surface shadow-sm">' +
     '<div class="stat-top flex items-start justify-between gap-3">' +
-    '<span class="stat-label text-[13px] font-medium text-[var(--text-2)]">' +
+    '<span class="stat-label text-[13px] font-medium text-text-2">' +
     esc(cfg.label) +
     "</span>" +
     '<span class="chip ' +
@@ -45,11 +45,11 @@ function statCard(cfg) {
     icon(cfg.icon) +
     "</span>" +
     "</div>" +
-    '<div class="stat-value text-[28px] font-bold tracking-[-0.03em] text-[var(--text)]">' +
+    '<div class="stat-value text-[28px] font-bold tracking-[-0.03em] text-text">' +
     esc(cfg.value) +
     "</div>" +
     (cfg.delta
-      ? '<div class="stat-foot flex items-center gap-2 text-sm text-[var(--text-2)]">' +
+      ? '<div class="stat-foot flex items-center gap-2 text-sm text-text-2">' +
         cfg.delta +
         '<span class="small muted">vs last month</span></div>'
       : "") +
@@ -60,13 +60,13 @@ function statCard(cfg) {
 function emptyState(title, message, iconName) {
   return (
     '<div class="empty flex flex-col items-center justify-center gap-3 py-14 text-center">' +
-    '<div class="empty-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--bg)] text-[var(--text-3)]">' +
+    '<div class="empty-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-bg text-text-3">' +
     icon(iconName || "inbox") +
     "</div>" +
-    '<h3 class="text-[15px] font-semibold text-[var(--text)]">' +
+    '<h3 class="text-[15px] font-semibold text-text">' +
     esc(title) +
     "</h3>" +
-    '<p class="max-w-[330px] text-[13.5px] text-[var(--text-2)]">' +
+    '<p class="max-w-[330px] text-[13.5px] text-text-2">' +
     esc(message) +
     "</p>" +
     "</div>"
@@ -170,16 +170,16 @@ function viewDashboard() {
   html +=
     '<div class="page-head flex flex-wrap items-end justify-between gap-5">' +
     "<div>" +
-    '<h2 class="page-title text-[32px] font-bold tracking-[-0.025em] text-[var(--text)]">' +
+    '<h2 class="page-title text-[32px] font-bold tracking-[-0.025em] text-text">' +
     greeting() +
     ", " +
     esc((profile.name || "there").split(" ")[0]) +
     "</h2>" +
-    '<p class="page-sub mt-1.5 text-[15px] text-[var(--text-2)]">Here\u2019s your financial overview for ' +
+    '<p class="page-sub mt-1.5 text-[15px] text-text-2">Here\u2019s your financial overview for ' +
     monthLabelLong(mk) +
     ".</p>" +
     "</div>" +
-    '<button class="btn btn-primary inline-flex items-center gap-2 rounded-lg bg-[var(--green)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--green-hover)]" type="button" data-action="add-tx">' +
+    '<button class="btn btn-primary inline-flex items-center gap-2 rounded-lg bg-green px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-hover" type="button" data-action="add-tx">' +
     icon("plus") +
     "Add Transaction</button>" +
     "</div>";
@@ -424,19 +424,19 @@ function viewTransactions() {
   html +=
     '<div class="page-head flex flex-wrap items-end justify-between gap-5">' +
     "<div>" +
-    '<h2 class="page-title text-[32px] font-bold tracking-[-0.025em] text-[var(--text)]">Transactions</h2>' +
-    '<p class="page-sub mt-1.5 text-[15px] text-[var(--text-2)]">Manage, filter and review every transaction on your account.</p>' +
+    '<h2 class="page-title text-[32px] font-bold tracking-[-0.025em] text-text">Transactions</h2>' +
+    '<p class="page-sub mt-1.5 text-[15px] text-text-2">Manage, filter and review every transaction on your account.</p>' +
     "</div>" +
-    '<button class="btn btn-primary inline-flex items-center gap-2 rounded-lg bg-[var(--green)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--green-hover)]" type="button" data-action="add-tx">' +
+    '<button class="btn btn-primary inline-flex items-center gap-2 rounded-lg bg-green px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-hover" type="button" data-action="add-tx">' +
     icon("plus") +
     "Add Transaction</button>" +
     "</div>";
 
   html +=
-    '<div class="card filter-bar mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm" style="margin-bottom:20px;">' +
+    '<div class="card filter-bar mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface p-4 shadow-sm" style="margin-bottom:20px;">' +
     '<div class="search relative flex-1 min-w-[180px]">' +
     icon("search") +
-    '<input class="input h-10 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] pl-10 text-sm text-[var(--text)] placeholder:text-[var(--text-3)]" id="txSearch" type="search" placeholder="Search by name, note or category…" value="' +
+    '<input class="input h-10 w-full rounded-lg border border-border bg-surface pl-10 text-sm text-text placeholder:text-text-3" id="txSearch" type="search" placeholder="Search by name, note or category…" value="' +
     esc(ui.tx.q) +
     '" aria-label="Search transactions">' +
     "</div>" +

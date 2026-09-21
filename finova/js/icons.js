@@ -91,7 +91,15 @@ if (typeof window !== "undefined" && window.lucide) {
   window.addEventListener("DOMContentLoaded", () => {
     if (typeof window.lucide.createIcons === "function") {
       window.lucide.createIcons({
-        attrs: { class: "icon" },
+        icons: window.lucide.icons,
+        attrs: {
+          class: "icon",
+          stroke: "currentColor",
+          fill: "none",
+          "stroke-width": 2,
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+        },
       });
     }
   });

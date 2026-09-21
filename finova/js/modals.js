@@ -38,7 +38,7 @@ function confirmDialog(opts) {
       icon("x") +
       "</button>" +
       "</div>" +
-      '<div class="modal-body"><p style="font-size:14px;color:var(--text-2);line-height:1.6;">' +
+      '<div class="modal-body"><p class="text-sm leading-6 text-text-2">' +
       esc(opts.message) +
       "</p></div>" +
       '<div class="modal-foot">' +
