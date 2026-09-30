@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f4f8fc" />
     <meta
       name="description"
-      content="A personal overview of balances, cash flow, budgets, and accounts."
+      content="A personal overview of balances, cash flow, budgets, and transactions."
     />
     <title>Overview | Finova</title>
     <link rel="stylesheet" href="../css/finova.css" />
@@ -15,6 +15,13 @@
     <div class="app-shell mx-auto min-h-screen">
       <header class="topbar">
         <a class="wordmark" href="#overview">Finova</a>
+        <div class="profile-controls">
+          <label class="profile-label" for="profile-select">
+            Profile
+            <select id="profile-select" aria-label="Choose profile" disabled></select>
+          </label>
+          <button type="button" class="profile-add" id="add-profile">Add profile</button>
+        </div>
         <p class="period-label">September <time datetime="2026">2026</time></p>
       </header>
 
@@ -33,7 +40,7 @@
           <section class="balance-panel" aria-labelledby="balance-heading">
             <p id="balance-heading" class="balance-label">Total balance</p>
             <p class="balance-value">$0.00</p>
-            <p class="balance-note">No accounts added yet</p>
+            <p class="balance-note">Based on recorded income and expenses</p>
           </section>
 
           <section class="metrics-grid" aria-label="Monthly totals">
@@ -109,40 +116,6 @@
 
           <div id="budget-list" class="budget-list" aria-live="polite"></div>
         </section>
-
-        <section
-          id="accounts"
-          class="page-view"
-          data-page="accounts"
-          aria-labelledby="accounts-heading"
-          hidden
-        >
-          <div class="page-heading">
-            <h1 id="accounts-heading">Accounts</h1>
-            <p>Your saved accounts</p>
-          </div>
-
-          <form id="account-form" class="budget-form" novalidate>
-            <label class="field">
-              <span>Account name</span>
-              <input type="text" name="name" maxlength="40" placeholder="Checking" required />
-            </label>
-            <label class="field">
-              <span>Initial balance</span>
-              <input
-                type="number"
-                name="balance"
-                step="0.01"
-                inputmode="decimal"
-                placeholder="0.00"
-                required
-              />
-            </label>
-            <button type="submit" class="budget-submit">Add account</button>
-          </form>
-
-          <div id="account-list" class="budget-list" aria-live="polite"></div>
-        </section>
       </main>
 
       <footer class="bottom-bar">
@@ -172,12 +145,32 @@
             <i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i
             ><span>Budgets</span>
           </a>
-          <a class="nav-link" href="#accounts" data-nav-page="accounts">
-            <i data-lucide="wallet-cards" aria-hidden="true"></i><span>Accounts</span>
-          </a>
         </nav>
       </footer>
     </div>
+
+    <dialog class="app-dialog profile-dialog" id="profile-dialog" aria-labelledby="profile-title">
+      <div class="dialog-surface">
+        <div class="sheet-header">
+          <h2 id="profile-title">Add a profile</h2>
+          <button
+            type="button"
+            class="sheet-close"
+            data-close-dialog
+            aria-label="Close profile form"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <form id="profile-form" class="budget-form" novalidate>
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" name="name" maxlength="40" autocomplete="off" required />
+          </label>
+          <button type="submit" class="budget-submit">Save profile</button>
+        </form>
+      </div>
+    </dialog>
 
     <dialog
       class="app-dialog quick-dialog"
@@ -253,8 +246,12 @@
         <form id="transaction-form" class="budget-form" novalidate>
           <input type="hidden" name="type" value="expense" />
           <label class="field">
-            <span>Account</span>
-            <select name="accountId" required></select>
+            <span>Category</span>
+            <select name="category" required></select>
+          </label>
+          <label class="field">
+            <span id="transaction-detail-label">What was it?</span>
+            <input type="text" name="description" maxlength="100" />
           </label>
           <label class="field">
             <span>Amount</span>

@@ -1,4 +1,4 @@
-const pageIds = new Set(["overview", "activity", "budgets", "accounts"]);
+const pageIds = new Set(["overview", "activity", "budgets"]);
 
 export function resolveCurrentPage(hash) {
   const pageId = typeof hash === "string" ? hash.replace(/^#/, "") : "";

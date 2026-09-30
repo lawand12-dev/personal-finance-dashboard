@@ -43,32 +43,39 @@ afterEach(() => {
 
 test("returns a versioned empty state when nothing has been saved", () => {
   assert.deepEqual(loadState(), {
-    schemaVersion: 1,
-    accounts: [],
-    transactions: [],
-    budgets: [],
+    schemaVersion: 2,
+    activeProfileId: null,
+    profiles: [],
   });
 });
 
-test("saves and loads budgets with accounts and transactions", () => {
+test("saves separate name-only profiles with manual categorized transactions", () => {
   const state = {
-    schemaVersion: 1,
-    accounts: [{ id: "account-1", name: "Checking", openingBalanceCents: 125000 }],
-    transactions: [
+    schemaVersion: 2,
+    activeProfileId: "profile-1",
+    profiles: [
       {
-        id: "transaction-1",
-        accountId: "account-1",
-        type: "expense",
-        amountCents: 4250,
-        date: "2026-09-30",
+        id: "profile-1",
+        name: "Alex",
+        openingBalanceCents: 0,
+        transactions: [
+          {
+            id: "transaction-1",
+            type: "expense",
+            category: "shopping",
+            description: "Winter coat",
+            amountCents: 8499,
+            date: "2026-09-30",
+          },
+        ],
+        budgets: [],
       },
-    ],
-    budgets: [
       {
-        id: "budget-1",
-        name: "Groceries",
-        amountCents: 60000,
-        month: "2026-09",
+        id: "profile-2",
+        name: "Sam",
+        openingBalanceCents: 0,
+        transactions: [],
+        budgets: [],
       },
     ],
   };
@@ -78,24 +85,47 @@ test("saves and loads budgets with accounts and transactions", () => {
   assert.deepEqual(loadState(), state);
 });
 
-test("saves and loads accounts and transactions", () => {
-  const state = {
-    schemaVersion: 1,
-    accounts: [{ id: "account-1", name: "Checking", openingBalanceCents: 125000 }],
-    transactions: [
+test("migrates the existing account-based data into a personal profile", () => {
+  storageMock.setItem(
+    "finova:state",
+    JSON.stringify({
+      schemaVersion: 1,
+      accounts: [{ id: "account-1", name: "Checking", openingBalanceCents: 125000 }],
+      transactions: [
+        {
+          id: "transaction-1",
+          accountId: "account-1",
+          type: "expense",
+          amountCents: 4250,
+          date: "2026-09-30",
+        },
+      ],
+      budgets: [],
+    }),
+  );
+
+  assert.deepEqual(loadState(), {
+    schemaVersion: 2,
+    activeProfileId: "default-profile",
+    profiles: [
       {
-        id: "transaction-1",
-        accountId: "account-1",
-        type: "expense",
-        amountCents: 4250,
-        date: "2026-09-30",
+        id: "default-profile",
+        name: "Me",
+        openingBalanceCents: 125000,
+        transactions: [
+          {
+            id: "transaction-1",
+            type: "expense",
+            category: "other",
+            description: "",
+            amountCents: 4250,
+            date: "2026-09-30",
+          },
+        ],
+        budgets: [],
       },
     ],
-  };
-
-  saveState(state);
-
-  assert.deepEqual(loadState(), state);
+  });
 });
 
 test("rejects malformed saved JSON instead of silently replacing it", () => {
@@ -105,10 +135,7 @@ test("rejects malformed saved JSON instead of silently replacing it", () => {
 });
 
 test("rejects state from an unsupported schema version", () => {
-  storageMock.setItem(
-    "finova:state",
-    JSON.stringify({ schemaVersion: 2, accounts: [], transactions: [] }),
-  );
+  storageMock.setItem("finova:state", JSON.stringify({ schemaVersion: 3, profiles: [] }));
 
   assert.throws(() => loadState(), { code: "UNSUPPORTED_SCHEMA_VERSION" });
 });

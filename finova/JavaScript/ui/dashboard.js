@@ -1,3 +1,5 @@
+import { findTransactionCategory, getTransactionCategories } from "../domain/categories.js";
+
 const currencyFormatter = new Intl.NumberFormat(undefined, {
   style: "currency",
   currency: "USD",
@@ -20,18 +22,16 @@ export function renderDashboard(summary, state, root = document) {
   }
 
   balanceElement.textContent = formatCurrency(summary.totalBalanceCents);
-  balanceNoteElement.textContent = getBalanceNote(state.accounts.length);
+  balanceNoteElement.textContent = getBalanceNote(state.openingBalanceCents);
   monthlyValues[0].textContent = formatCurrency(summary.monthlyIncomeCents);
   monthlyValues[1].textContent = formatCurrency(summary.monthlyExpenseCents);
   renderBudgets(root, state.budgets ?? []);
-  renderAccounts(root, state.accounts ?? []);
-  renderTransactions(root, state.transactions ?? [], state.accounts ?? []);
-  renderTransactionDeleteChoices(root, state.transactions ?? [], state.accounts ?? []);
-  syncAccountSelect(root, state.accounts ?? []);
-  syncQuickActions(root, state.accounts ?? [], state.transactions ?? []);
+  renderTransactions(root, state.transactions ?? []);
+  renderTransactionDeleteChoices(root, state.transactions ?? []);
+  syncQuickActions(root, state.transactions ?? []);
 }
 
-export function renderTransactionDeleteChoices(root, transactions, accounts) {
+export function renderTransactionDeleteChoices(root, transactions) {
   const listElement = root.querySelector("#delete-transaction-list");
 
   if (!listElement) {
@@ -49,7 +49,6 @@ export function renderTransactionDeleteChoices(root, transactions, accounts) {
   }
 
   const documentRef = root.ownerDocument ?? root;
-  const accountMap = new Map((accounts ?? []).map((account) => [account.id, account.name]));
   const fragment = documentRef.createDocumentFragment();
 
   for (const transaction of [...transactions].reverse()) {
@@ -57,6 +56,7 @@ export function renderTransactionDeleteChoices(root, transactions, accounts) {
     const button = documentRef.createElement("button");
     const details = documentRef.createElement("span");
     const amount = documentRef.createElement("span");
+    const category = findTransactionCategory(transaction.type, transaction.category);
     const type = transaction.type === "income" ? "Income" : "Expense";
 
     item.className = "delete-transaction-item";
@@ -64,7 +64,7 @@ export function renderTransactionDeleteChoices(root, transactions, accounts) {
     button.type = "button";
     button.dataset.transactionId = transaction.id;
     details.className = "delete-transaction-details";
-    details.textContent = `${type} · ${accountMap.get(transaction.accountId) ?? "Unknown account"} · ${transaction.date}`;
+    details.textContent = `${type} · ${category?.label ?? "Other"}${transaction.description ? ` · ${transaction.description}` : ""} · ${transaction.date}`;
     amount.className = `delete-transaction-amount ${transaction.type === "income" ? "text-green" : "text-red"}`;
     amount.textContent = `${transaction.type === "income" ? "+" : "−"}${formatCurrency(transaction.amountCents)}`;
 
@@ -112,40 +112,6 @@ export function bindBudgetForm(root = document, onAddBudget) {
   });
 }
 
-export function bindAccountForm(root = document, onAddAccount) {
-  const form = root.querySelector("#account-form");
-
-  if (!form || form.dataset.bound === "true") {
-    return;
-  }
-
-  form.dataset.bound = "true";
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(form);
-    const name = String(formData.get("name") ?? "").trim();
-    const balanceValue = Number.parseFloat(String(formData.get("balance") ?? ""));
-
-    if (!name || !Number.isFinite(balanceValue)) {
-      form.reportValidity?.();
-      return;
-    }
-
-    const nextAccount = {
-      id: createAccountId(),
-      name,
-      openingBalanceCents: Math.round(balanceValue * 100),
-    };
-
-    onAddAccount?.(nextAccount);
-    form.reset();
-    const firstInput = form.querySelector('input[name="name"]');
-    firstInput?.focus();
-  });
-}
-
 export function bindTransactionForm(root = document, onAddTransaction) {
   const form = root.querySelector("#transaction-form");
 
@@ -158,32 +124,44 @@ export function bindTransactionForm(root = document, onAddTransaction) {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const accountSelect = form.querySelector('select[name="accountId"]');
     const formData = new FormData(form);
-    const accountId = String(formData.get("accountId") ?? "").trim();
     const typeValue = String(formData.get("type") ?? "expense");
+    const categoryId = String(formData.get("category") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
     const amountValue = Number.parseFloat(String(formData.get("amount") ?? ""));
     const dateValue = String(formData.get("date") ?? "").trim();
+    const category = findTransactionCategory(typeValue, categoryId);
 
-    if (!accountId || !dateValue || !Number.isFinite(amountValue) || amountValue <= 0) {
+    if (!category || !dateValue || !Number.isFinite(amountValue) || amountValue <= 0) {
       form.reportValidity?.();
       return;
     }
 
     const nextTransaction = {
       id: createTransactionId(),
-      accountId,
       type: typeValue === "income" ? "income" : "expense",
+      category: category.id,
+      description,
       amountCents: Math.round(amountValue * 100),
       date: dateValue,
     };
 
     onAddTransaction?.(nextTransaction);
     form.reset();
-    if (accountSelect) {
-      accountSelect.value = accountId;
-    }
   });
+}
+
+export function syncTransactionCategories(root, type) {
+  const select = root.querySelector('#transaction-form select[name="category"]');
+  if (!select) {
+    return;
+  }
+
+  const categories = getTransactionCategories(type);
+  select.innerHTML = categories
+    .map((category) => `<option value="${category.id}">${category.label}</option>`)
+    .join("");
+  select.value = categories[0]?.id ?? "";
 }
 
 function validateInputs(summary, state) {
@@ -197,8 +175,8 @@ function validateInputs(summary, state) {
     throw new TypeError("Dashboard summary must contain safe integer totals in cents.");
   }
 
-  if (state === null || typeof state !== "object" || !Array.isArray(state.accounts)) {
-    throw new TypeError("Dashboard state must contain an accounts array.");
+  if (state === null || typeof state !== "object" || !Array.isArray(state.transactions)) {
+    throw new TypeError("Dashboard profile must contain a transactions array.");
   }
 }
 
@@ -239,44 +217,7 @@ function renderBudgets(root, budgets) {
   listElement.appendChild(fragment);
 }
 
-function renderAccounts(root, accounts) {
-  const listElement = root.querySelector("#account-list");
-
-  if (!listElement) {
-    return;
-  }
-
-  if (!Array.isArray(accounts) || accounts.length === 0) {
-    listElement.innerHTML = `
-      <div class="empty-panel compact-empty">
-        <p class="empty-title">No accounts yet</p>
-        <p>Your linked account balances will appear here.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const documentRef = root.ownerDocument ?? root;
-  const fragment = documentRef.createDocumentFragment();
-
-  for (const account of accounts) {
-    const item = documentRef.createElement("article");
-    item.className = "budget-card";
-    item.innerHTML = `
-      <div>
-        <h3>${escapeHtml(account.name)}</h3>
-        <p class="budget-meta">Account</p>
-      </div>
-      <div class="budget-amount">${formatCurrency(account.openingBalanceCents)}</div>
-    `;
-    fragment.appendChild(item);
-  }
-
-  listElement.innerHTML = "";
-  listElement.appendChild(fragment);
-}
-
-function renderTransactions(root, transactions, accounts) {
+function renderTransactions(root, transactions) {
   const listElement = root.querySelector("#transaction-list");
 
   if (!listElement) {
@@ -287,13 +228,12 @@ function renderTransactions(root, transactions, accounts) {
     listElement.innerHTML = `
       <div class="empty-panel compact-empty">
         <p class="empty-title">No transactions yet</p>
-        <p>Your recent account activity will appear here.</p>
+        <p>Your recorded income and expenses will appear here.</p>
       </div>
     `;
     return;
   }
 
-  const accountMap = new Map((accounts ?? []).map((account) => [account.id, account.name]));
   const documentRef = root.ownerDocument ?? root;
   const fragment = documentRef.createDocumentFragment();
 
@@ -302,10 +242,15 @@ function renderTransactions(root, transactions, accounts) {
     item.className = "budget-card";
     const sign = transaction.type === "income" ? "+" : "-";
     const toneClass = transaction.type === "income" ? "text-green" : "text-red";
+    const category = findTransactionCategory(transaction.type, transaction.category);
     item.innerHTML = `
-      <div>
-        <h3>${escapeHtml(accountMap.get(transaction.accountId) ?? "Unknown account")}</h3>
-        <p class="budget-meta">${escapeHtml(transaction.type)} • ${escapeHtml(transaction.date)}</p>
+      <div class="transaction-leading">
+        <span class="transaction-category-icon"><i data-lucide="${category?.icon ?? "circle-ellipsis"}" aria-hidden="true"></i></span>
+        <span>
+          <h3>${escapeHtml(category?.label ?? "Other")}</h3>
+          <p class="budget-meta">${escapeHtml(transaction.description || transaction.date)}</p>
+          ${transaction.description ? `<p class="budget-meta">${escapeHtml(transaction.date)}</p>` : ""}
+        </span>
       </div>
       <div class="budget-amount ${toneClass}">${sign}${formatCurrency(transaction.amountCents)}</div>
     `;
@@ -316,51 +261,9 @@ function renderTransactions(root, transactions, accounts) {
   listElement.appendChild(fragment);
 }
 
-function syncAccountSelect(root, accounts) {
-  const form = root.querySelector("#transaction-form");
-
-  if (!form) {
-    return;
-  }
-
-  const select = form.querySelector('select[name="accountId"]');
-
-  if (!select) {
-    return;
-  }
-
-  const currentValue = select.value;
-  const nextAccounts = accounts ?? [];
-  const options = [
-    '<option value="">Select an account</option>',
-    ...nextAccounts.map(
-      (account) => `<option value="${escapeHtml(account.id)}">${escapeHtml(account.name)}</option>`,
-    ),
-  ];
-
-  select.innerHTML = options.join("");
-  select.disabled = nextAccounts.length === 0;
-
-  if (nextAccounts.length === 1) {
-    select.value = nextAccounts[0].id;
-    return;
-  }
-
-  if (currentValue && nextAccounts.some((account) => account.id === currentValue)) {
-    select.value = currentValue;
-  }
-}
-
-function syncQuickActions(root, accounts, transactions) {
-  const hasAccounts = accounts.length > 0;
+function syncQuickActions(root, transactions) {
   const hasTransactions = transactions.length > 0;
   const helper = root.querySelector("#quick-actions-help");
-
-  root
-    .querySelectorAll('[data-action="add-income"], [data-action="add-expense"]')
-    .forEach((button) => {
-      button.disabled = !hasAccounts;
-    });
 
   const deleteButton = root.querySelector('[data-action="delete-transaction"]');
 
@@ -369,11 +272,9 @@ function syncQuickActions(root, accounts, transactions) {
   }
 
   if (helper) {
-    helper.textContent = hasAccounts
-      ? hasTransactions
-        ? "Add or remove a transaction."
-        : "No transactions to delete."
-      : "Add an account before adding transactions.";
+    helper.textContent = hasTransactions
+      ? "Add or remove a transaction."
+      : "Add income or an expense. There are no transactions to delete yet.";
   }
 }
 
@@ -391,12 +292,10 @@ function formatCurrency(cents) {
   return currencyFormatter.format(cents / 100);
 }
 
-function getBalanceNote(accountCount) {
-  if (accountCount === 0) {
-    return "No accounts added yet";
-  }
-
-  return `Across ${accountCount} ${accountCount === 1 ? "account" : "accounts"}`;
+function getBalanceNote(openingBalanceCents = 0) {
+  return openingBalanceCents === 0
+    ? "Based on recorded income and expenses"
+    : "Includes your saved opening balance";
 }
 
 function getCurrentMonthKey(date) {
@@ -411,14 +310,6 @@ function createBudgetId() {
   }
 
   return `budget-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function createAccountId() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-
-  return `account-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function createTransactionId() {

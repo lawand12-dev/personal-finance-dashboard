@@ -2,23 +2,19 @@ const MIN_SUPPORTED_YEAR = 1900;
 const MAX_SUPPORTED_YEAR = 2100;
 
 export function calculateDashboardSummary(state, month) {
-  if (
-    state === null ||
-    typeof state !== "object" ||
-    !Array.isArray(state.accounts) ||
-    !Array.isArray(state.transactions)
-  ) {
-    throw new TypeError("Finance state must include accounts and transactions arrays.");
+  if (state === null || typeof state !== "object" || !Array.isArray(state.transactions)) {
+    throw new TypeError("Finance profile must include a transactions array.");
   }
 
   validateMonth(month);
-  validateAccounts(state.accounts);
   validateTransactions(state.transactions);
 
-  let totalBalanceCents = state.accounts.reduce(
-    (total, account) => addCents(total, account.openingBalanceCents),
-    0,
-  );
+  const openingBalanceCents = state.openingBalanceCents ?? 0;
+  if (!Number.isSafeInteger(openingBalanceCents)) {
+    throw new TypeError("Finance profile openingBalanceCents must be a safe integer.");
+  }
+
+  let totalBalanceCents = openingBalanceCents;
   let monthlyIncomeCents = 0;
   let monthlyExpenseCents = 0;
 
@@ -65,18 +61,6 @@ function validateMonth(month) {
     throw new RangeError(
       `Month year must be between ${MIN_SUPPORTED_YEAR} and ${MAX_SUPPORTED_YEAR}.`,
     );
-  }
-}
-
-function validateAccounts(accounts) {
-  for (const [index, account] of accounts.entries()) {
-    if (account === null || typeof account !== "object" || Array.isArray(account)) {
-      throw new TypeError(`accounts[${index}] must be an object.`);
-    }
-
-    if (!Number.isSafeInteger(account.openingBalanceCents)) {
-      throw new TypeError(`accounts[${index}].openingBalanceCents must be a safe integer.`);
-    }
   }
 }
 

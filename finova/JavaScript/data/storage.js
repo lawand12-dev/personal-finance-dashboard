@@ -1,5 +1,5 @@
 const STORAGE_KEY = "finova:state";
-const CURRENT_SCHEMA_VERSION = 1;
+const CURRENT_SCHEMA_VERSION = 2;
 const MIN_TRANSACTION_YEAR = 1900;
 const MAX_TRANSACTION_YEAR = 2100;
 
@@ -39,6 +39,11 @@ export function loadState() {
 
   validateState(state);
 
+  if (state.schemaVersion === 1) {
+    state = migrateLegacyState(state);
+    saveState(state);
+  }
+
   return state;
 }
 
@@ -77,106 +82,179 @@ export function saveState(state) {
 function createEmptyState() {
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
-    accounts: [],
-    transactions: [],
-    budgets: [],
+    activeProfileId: null,
+    profiles: [],
   };
 }
 
-function normalizeState(state) {
+function validateState(state) {
   if (state === null || typeof state !== "object" || Array.isArray(state)) {
     invalidState("state", "expected an object");
   }
-
-  if (!Array.isArray(state.accounts)) {
-    state.accounts = [];
-  }
-
-  if (!Array.isArray(state.transactions)) {
-    state.transactions = [];
-  }
-
-  if (!Array.isArray(state.budgets)) {
-    state.budgets = [];
-  }
-
-  return state;
-}
-
-function validateState(state) {
-  normalizeState(state);
 
   if (!Number.isInteger(state.schemaVersion)) {
     invalidState("schemaVersion", "expected an integer");
   }
 
-  if (state.schemaVersion !== CURRENT_SCHEMA_VERSION) {
+  if (state.schemaVersion !== 1 && state.schemaVersion !== CURRENT_SCHEMA_VERSION) {
     throw new FinanceStorageError(
       "UNSUPPORTED_SCHEMA_VERSION",
       `Saved finance data uses schema version ${state.schemaVersion}; this app supports version ${CURRENT_SCHEMA_VERSION}.`,
     );
   }
 
-  const accountIds = new Set();
+  if (state.schemaVersion === 1) {
+    validateLegacyState(state);
+    return;
+  }
+
+  if (!Array.isArray(state.profiles)) {
+    invalidState("profiles", "expected an array");
+  }
+
+  const profileIds = new Set();
+  for (const [index, profile] of state.profiles.entries()) {
+    validateProfile(profile, index, profileIds);
+  }
+
+  if (state.profiles.length === 0) {
+    if (state.activeProfileId !== null) {
+      invalidState("activeProfileId", "must be null when there are no profiles");
+    }
+  } else if (!profileIds.has(state.activeProfileId)) {
+    invalidState("activeProfileId", "does not match a saved profile");
+  }
+}
+
+function validateLegacyState(state) {
+  if (!Array.isArray(state.accounts) || !Array.isArray(state.transactions)) {
+    invalidState("state", "legacy data must include accounts and transactions arrays");
+  }
 
   for (const [index, account] of state.accounts.entries()) {
-    validateAccount(account, index, accountIds);
+    if (account === null || typeof account !== "object" || Array.isArray(account)) {
+      invalidState(`accounts[${index}]`, "expected an object");
+    }
+
+    requireNonEmptyString(account.id, `accounts[${index}].id`);
+    requireNonEmptyString(account.name, `accounts[${index}].name`);
+    if (!Number.isSafeInteger(account.openingBalanceCents)) {
+      invalidState(
+        `accounts[${index}].openingBalanceCents`,
+        "expected a safe integer amount in cents",
+      );
+    }
   }
 
+  const accountIds = new Set(state.accounts.map((account) => account.id));
   const transactionIds = new Set();
-
   for (const [index, transaction] of state.transactions.entries()) {
-    validateTransaction(transaction, index, accountIds, transactionIds);
+    const path = `transactions[${index}]`;
+    if (transaction === null || typeof transaction !== "object" || Array.isArray(transaction)) {
+      invalidState(path, "expected an object");
+    }
+
+    requireNonEmptyString(transaction.id, `${path}.id`);
+    requireNonEmptyString(transaction.accountId, `${path}.accountId`);
+    if (!accountIds.has(transaction.accountId)) {
+      invalidState(`${path}.accountId`, "does not match a saved account");
+    }
+    if (transactionIds.has(transaction.id)) {
+      invalidState(`${path}.id`, "must be unique");
+    }
+    transactionIds.add(transaction.id);
+    validateTransactionFields(transaction, path, false);
   }
 
-  for (const [index, budget] of state.budgets.entries()) {
+  for (const [index, budget] of (Array.isArray(state.budgets) ? state.budgets : []).entries()) {
     validateBudget(budget, index);
   }
 }
 
-function validateAccount(account, index, accountIds) {
-  const path = `accounts[${index}]`;
+function migrateLegacyState(state) {
+  const openingBalanceCents = state.accounts.reduce((total, account) => {
+    const nextTotal = total + account.openingBalanceCents;
+    if (!Number.isSafeInteger(nextTotal)) {
+      invalidState("accounts", "combined opening balance exceeds the safe integer range");
+    }
+    return nextTotal;
+  }, 0);
 
-  if (account === null || typeof account !== "object" || Array.isArray(account)) {
+  const profile = {
+    id: "default-profile",
+    name: "Me",
+    openingBalanceCents,
+    transactions: state.transactions.map(({ accountId, ...transaction }) => ({
+      ...transaction,
+      category: "other",
+      description: "",
+    })),
+    budgets: Array.isArray(state.budgets) ? state.budgets : [],
+  };
+
+  return {
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    activeProfileId: profile.id,
+    profiles: [profile],
+  };
+}
+
+function validateProfile(profile, index, profileIds) {
+  const path = `profiles[${index}]`;
+
+  if (profile === null || typeof profile !== "object" || Array.isArray(profile)) {
     invalidState(path, "expected an object");
   }
 
-  requireNonEmptyString(account.id, `${path}.id`);
-  requireNonEmptyString(account.name, `${path}.name`);
-
-  if (!Number.isSafeInteger(account.openingBalanceCents)) {
+  requireNonEmptyString(profile.id, `${path}.id`);
+  requireNonEmptyString(profile.name, `${path}.name`);
+  if (!Number.isSafeInteger(profile.openingBalanceCents)) {
     invalidState(`${path}.openingBalanceCents`, "expected a safe integer amount in cents");
   }
 
-  if (accountIds.has(account.id)) {
+  if (profileIds.has(profile.id)) {
     invalidState(`${path}.id`, "must be unique");
   }
+  profileIds.add(profile.id);
 
-  accountIds.add(account.id);
+  if (!Array.isArray(profile.transactions)) {
+    invalidState(`${path}.transactions`, "expected an array");
+  }
+  if (!Array.isArray(profile.budgets)) {
+    invalidState(`${path}.budgets`, "expected an array");
+  }
+
+  const transactionIds = new Set();
+  for (const [transactionIndex, transaction] of profile.transactions.entries()) {
+    const transactionPath = `${path}.transactions[${transactionIndex}]`;
+    validateTransactionFields(transaction, transactionPath, true);
+    if (transactionIds.has(transaction.id)) {
+      invalidState(`${transactionPath}.id`, "must be unique within its profile");
+    }
+    transactionIds.add(transaction.id);
+  }
+
+  for (const [budgetIndex, budget] of profile.budgets.entries()) {
+    validateBudget(budget, budgetIndex, `${path}.budgets`);
+  }
 }
 
-function validateTransaction(transaction, index, accountIds, transactionIds) {
-  const path = `transactions[${index}]`;
-
+function validateTransactionFields(transaction, path, includeCategory) {
   if (transaction === null || typeof transaction !== "object" || Array.isArray(transaction)) {
     invalidState(path, "expected an object");
   }
 
   requireNonEmptyString(transaction.id, `${path}.id`);
-  requireNonEmptyString(transaction.accountId, `${path}.accountId`);
-
-  if (!accountIds.has(transaction.accountId)) {
-    invalidState(`${path}.accountId`, "does not match a saved account");
-  }
-
-  if (transactionIds.has(transaction.id)) {
-    invalidState(`${path}.id`, "must be unique");
-  }
-
-  transactionIds.add(transaction.id);
 
   if (transaction.type !== "income" && transaction.type !== "expense") {
     invalidState(`${path}.type`, "expected income or expense");
+  }
+
+  if (includeCategory) {
+    requireNonEmptyString(transaction.category, `${path}.category`);
+    if (typeof transaction.description !== "string") {
+      invalidState(`${path}.description`, "expected a string");
+    }
   }
 
   if (!Number.isSafeInteger(transaction.amountCents) || transaction.amountCents <= 0) {
@@ -191,8 +269,8 @@ function validateTransaction(transaction, index, accountIds, transactionIds) {
   }
 }
 
-function validateBudget(budget, index) {
-  const path = `budgets[${index}]`;
+function validateBudget(budget, index, parentPath = "budgets") {
+  const path = `${parentPath}[${index}]`;
 
   if (budget === null || typeof budget !== "object" || Array.isArray(budget)) {
     invalidState(path, "expected an object");
