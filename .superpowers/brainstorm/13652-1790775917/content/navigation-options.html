@@ -1,0 +1,221 @@
+<style>
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+  }
+  .preview {
+    overflow: hidden;
+    border: 1px solid #d9e4ef;
+    border-radius: 12px;
+    background: #f4f8fc;
+    box-shadow: 0 8px 24px #142b4312;
+  }
+  .preview-title {
+    padding: 14px 16px 4px;
+    color: #142b43;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .preview-caption {
+    padding: 0 16px 12px;
+    color: #4b6279;
+    font-size: 13px;
+  }
+  .mock-app {
+    min-height: 310px;
+    padding: 16px;
+    background: #fff;
+  }
+  .mock-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d9e4ef;
+    padding-bottom: 10px;
+    color: #142b43;
+    font-weight: 700;
+  }
+  .mock-period {
+    color: #4b6279;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .mock-page {
+    padding: 18px 0 20px;
+  }
+  .mock-page h3 {
+    margin: 0;
+    color: #142b43;
+    font-size: 18px;
+  }
+  .mock-page p {
+    margin: 5px 0 16px;
+    color: #4b6279;
+    font-size: 13px;
+  }
+  .mock-line {
+    height: 11px;
+    margin-top: 9px;
+    border-radius: 6px;
+    background: #e9f1fb;
+  }
+  .mock-line.short {
+    width: 62%;
+  }
+  .mock-balance {
+    padding: 14px;
+    border-radius: 8px;
+    background: #174ea6;
+    color: white;
+    font-size: 12px;
+  }
+  .mock-balance strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 22px;
+  }
+  .mock-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    border-top: 1px solid #d9e4ef;
+    padding-top: 9px;
+  }
+  .mock-nav-item {
+    min-height: 42px;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 2px;
+    color: #4b6279;
+    font-size: 10px;
+  }
+  .mock-nav-item.active {
+    color: #123f87;
+    font-weight: 700;
+  }
+  .mock-icon {
+    color: #174ea6;
+    font-size: 17px;
+    line-height: 1;
+  }
+  .mock-add {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #174ea6;
+    color: white;
+    font-size: 22px;
+  }
+  .mock-sheet {
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid #d9e4ef;
+    border-radius: 10px;
+    background: #f8fbff;
+  }
+  .mock-sheet strong {
+    color: #142b43;
+    font-size: 13px;
+  }
+  .mock-action {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 8px;
+    padding: 8px;
+    border: 1px solid #d9e4ef;
+    border-radius: 7px;
+    background: white;
+    color: #142b43;
+    font-size: 12px;
+  }
+  .mock-action.danger {
+    color: #b42318;
+  }
+  .recommend {
+    margin: 18px 0 0;
+    padding: 12px 14px;
+    border-left: 3px solid #174ea6;
+    background: #e9f1fb;
+    color: #142b43;
+    font-size: 14px;
+  }
+</style>
+<h2>Bottom navigation style</h2>
+<p class="subtitle">
+  Both keep each destination as a separate view in the shared app shell. The center action owns
+  transaction add and delete.
+</p>
+<div class="compare-grid">
+  <div class="preview" data-choice="icons-and-labels" onclick="toggleSelect(this)">
+    <div class="preview-title">A · Icons + labels</div>
+    <div class="preview-caption">
+      More explicit on every visit; strongest fit for four destinations.
+    </div>
+    <div class="mock-app">
+      <div class="mock-head">
+        <span>Finova</span><span class="mock-period">September 2026</span>
+      </div>
+      <div class="mock-page">
+        <h3>Overview</h3>
+        <p>Your money at a glance</p>
+        <div class="mock-balance">Total balance<strong>$4,820.50</strong></div>
+        <div class="mock-line"></div>
+        <div class="mock-line short"></div>
+      </div>
+      <div class="mock-nav">
+        <div class="mock-nav-item active"><span class="mock-icon">⌂</span>Overview</div>
+        <div class="mock-nav-item"><span class="mock-icon">◷</span>Activity</div>
+        <div class="mock-nav-item"><span class="mock-add">+</span></div>
+        <div class="mock-nav-item"><span class="mock-icon">▤</span>Budgets</div>
+        <div class="mock-nav-item"><span class="mock-icon">▣</span>Accounts</div>
+      </div>
+      <div class="mock-sheet">
+        <strong>Transactions</strong>
+        <div class="mock-action"><span class="mock-icon">↘</span>Add expense</div>
+        <div class="mock-action"><span class="mock-icon">↗</span>Add income</div>
+        <div class="mock-action danger"><span>×</span>Delete a transaction</div>
+      </div>
+    </div>
+  </div>
+  <div class="preview" data-choice="icons-only" onclick="toggleSelect(this)">
+    <div class="preview-title">B · Icons only</div>
+    <div class="preview-caption">
+      Compact and quieter, but requires familiar symbols or accessible tooltips.
+    </div>
+    <div class="mock-app">
+      <div class="mock-head">
+        <span>Finova</span><span class="mock-period">September 2026</span>
+      </div>
+      <div class="mock-page">
+        <h3>Overview</h3>
+        <p>Your money at a glance</p>
+        <div class="mock-balance">Total balance<strong>$4,820.50</strong></div>
+        <div class="mock-line"></div>
+        <div class="mock-line short"></div>
+      </div>
+      <div class="mock-nav">
+        <div class="mock-nav-item active"><span class="mock-icon">⌂</span></div>
+        <div class="mock-nav-item"><span class="mock-icon">◷</span></div>
+        <div class="mock-nav-item"><span class="mock-add">+</span></div>
+        <div class="mock-nav-item"><span class="mock-icon">▤</span></div>
+        <div class="mock-nav-item"><span class="mock-icon">▣</span></div>
+      </div>
+      <div class="mock-sheet">
+        <strong>Transactions</strong>
+        <div class="mock-action"><span class="mock-icon">↘</span>Add expense</div>
+        <div class="mock-action"><span class="mock-icon">↗</span>Add income</div>
+        <div class="mock-action danger"><span>×</span>Delete a transaction</div>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="recommend">
+  <strong>My recommendation:</strong> A, with Lucide icons above labels. It preserves fast scanning
+  and makes the selected destination clear; keep delete behind a confirmation step.
+</p>

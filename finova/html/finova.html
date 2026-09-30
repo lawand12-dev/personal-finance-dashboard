@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f8fc" />
+    <meta
+      name="description"
+      content="A personal overview of balances, cash flow, budgets, and accounts."
+    />
+    <title>Overview | Finova</title>
+    <link rel="stylesheet" href="../css/finova.css" />
+  </head>
+  <body>
+    <div class="app-shell mx-auto min-h-screen">
+      <header class="topbar">
+        <a class="wordmark" href="#overview">Finova</a>
+        <p class="period-label">September <time datetime="2026">2026</time></p>
+      </header>
+
+      <main class="main-content">
+        <section
+          id="overview"
+          class="page-view"
+          data-page="overview"
+          aria-labelledby="overview-heading"
+        >
+          <div class="page-heading">
+            <h1 id="overview-heading">Overview</h1>
+            <p>Your money at a glance</p>
+          </div>
+
+          <section class="balance-panel" aria-labelledby="balance-heading">
+            <p id="balance-heading" class="balance-label">Total balance</p>
+            <p class="balance-value">$0.00</p>
+            <p class="balance-note">No accounts added yet</p>
+          </section>
+
+          <section class="metrics-grid" aria-label="Monthly totals">
+            <article class="metric-panel">
+              <h2>Income</h2>
+              <p class="metric-value">$0.00</p>
+              <p class="metric-caption">This month</p>
+            </article>
+            <article class="metric-panel">
+              <h2>Expenses</h2>
+              <p class="metric-value">$0.00</p>
+              <p class="metric-caption">This month</p>
+            </article>
+          </section>
+
+          <section class="content-section" aria-labelledby="cash-flow-heading">
+            <div class="section-heading">
+              <h2 id="cash-flow-heading">Cash flow</h2>
+              <p>September</p>
+            </div>
+            <div class="empty-panel">
+              <p class="empty-title">No cash flow to show</p>
+              <p>Add transactions to see income and spending over time.</p>
+            </div>
+          </section>
+        </section>
+
+        <section
+          id="activity"
+          class="page-view"
+          data-page="activity"
+          aria-labelledby="activity-heading"
+          hidden
+        >
+          <div class="page-heading">
+            <h1 id="activity-heading">Activity</h1>
+            <p>Your transaction history</p>
+          </div>
+          <div id="transaction-list" class="budget-list" aria-live="polite"></div>
+        </section>
+
+        <section
+          id="budgets"
+          class="page-view"
+          data-page="budgets"
+          aria-labelledby="budgets-heading"
+          hidden
+        >
+          <div class="page-heading">
+            <h1 id="budgets-heading">Budgets</h1>
+            <p>Plan your monthly spending</p>
+          </div>
+
+          <form id="budget-form" class="budget-form" novalidate>
+            <label class="field">
+              <span>Budget name</span>
+              <input type="text" name="name" maxlength="40" placeholder="Groceries" required />
+            </label>
+            <label class="field">
+              <span>Monthly amount</span>
+              <input
+                type="number"
+                name="amount"
+                min="1"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="0.00"
+                required
+              />
+            </label>
+            <button type="submit" class="budget-submit">Add budget</button>
+          </form>
+
+          <div id="budget-list" class="budget-list" aria-live="polite"></div>
+        </section>
+
+        <section
+          id="accounts"
+          class="page-view"
+          data-page="accounts"
+          aria-labelledby="accounts-heading"
+          hidden
+        >
+          <div class="page-heading">
+            <h1 id="accounts-heading">Accounts</h1>
+            <p>Your saved accounts</p>
+          </div>
+
+          <form id="account-form" class="budget-form" novalidate>
+            <label class="field">
+              <span>Account name</span>
+              <input type="text" name="name" maxlength="40" placeholder="Checking" required />
+            </label>
+            <label class="field">
+              <span>Initial balance</span>
+              <input
+                type="number"
+                name="balance"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="0.00"
+                required
+              />
+            </label>
+            <button type="submit" class="budget-submit">Add account</button>
+          </form>
+
+          <div id="account-list" class="budget-list" aria-live="polite"></div>
+        </section>
+      </main>
+
+      <footer class="bottom-bar">
+        <nav class="bottom-nav" aria-label="Main navigation">
+          <a
+            class="nav-link nav-link-current"
+            href="#overview"
+            data-nav-page="overview"
+            aria-current="page"
+          >
+            <i data-lucide="house" aria-hidden="true"></i><span>Overview</span>
+          </a>
+          <a class="nav-link" href="#activity" data-nav-page="activity">
+            <i data-lucide="activity" aria-hidden="true"></i><span>Activity</span>
+          </a>
+          <button
+            class="nav-add"
+            type="button"
+            aria-label="Transaction actions"
+            aria-haspopup="dialog"
+            aria-controls="quick-actions-dialog"
+            aria-expanded="false"
+          >
+            <i data-lucide="plus" aria-hidden="true"></i>
+          </button>
+          <a class="nav-link" href="#budgets" data-nav-page="budgets">
+            <i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i
+            ><span>Budgets</span>
+          </a>
+          <a class="nav-link" href="#accounts" data-nav-page="accounts">
+            <i data-lucide="wallet-cards" aria-hidden="true"></i><span>Accounts</span>
+          </a>
+        </nav>
+      </footer>
+    </div>
+
+    <dialog
+      class="app-dialog quick-dialog"
+      id="quick-actions-dialog"
+      aria-labelledby="quick-actions-title"
+    >
+      <div class="dialog-surface">
+        <div class="sheet-header">
+          <h2 id="quick-actions-title">Quick actions</h2>
+          <button
+            type="button"
+            class="sheet-close"
+            data-close-dialog
+            aria-label="Close quick actions"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <p class="dialog-help" id="quick-actions-help"></p>
+        <button
+          type="button"
+          class="quick-action"
+          data-action="add-expense"
+          aria-describedby="quick-actions-help"
+        >
+          <span class="action-icon expense-icon"
+            ><i data-lucide="trending-down" aria-hidden="true"></i
+          ></span>
+          <span>Add expense</span>
+        </button>
+        <button
+          type="button"
+          class="quick-action"
+          data-action="add-income"
+          aria-describedby="quick-actions-help"
+        >
+          <span class="action-icon income-icon"
+            ><i data-lucide="trending-up" aria-hidden="true"></i
+          ></span>
+          <span>Add income</span>
+        </button>
+        <button
+          type="button"
+          class="quick-action quick-action-danger"
+          data-action="delete-transaction"
+        >
+          <span class="action-icon delete-icon"
+            ><i data-lucide="trash-2" aria-hidden="true"></i
+          ></span>
+          <span>Delete a transaction</span>
+        </button>
+      </div>
+    </dialog>
+
+    <dialog
+      class="app-dialog transaction-dialog"
+      id="transaction-dialog"
+      aria-labelledby="transaction-dialog-title"
+    >
+      <div class="dialog-surface">
+        <div class="sheet-header">
+          <h2 id="transaction-dialog-title">Add expense</h2>
+          <button
+            type="button"
+            class="sheet-close"
+            data-close-dialog
+            aria-label="Close transaction form"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <form id="transaction-form" class="budget-form" novalidate>
+          <input type="hidden" name="type" value="expense" />
+          <label class="field">
+            <span>Account</span>
+            <select name="accountId" required></select>
+          </label>
+          <label class="field">
+            <span>Amount</span>
+            <input
+              type="number"
+              name="amount"
+              min="0.01"
+              step="0.01"
+              inputmode="decimal"
+              placeholder="0.00"
+              required
+            />
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input type="date" name="date" required />
+          </label>
+          <button type="submit" class="budget-submit">Add expense</button>
+        </form>
+      </div>
+    </dialog>
+
+    <dialog
+      class="app-dialog delete-dialog"
+      id="delete-dialog"
+      aria-labelledby="delete-dialog-title"
+    >
+      <div class="dialog-surface">
+        <section id="delete-picker">
+          <div class="sheet-header">
+            <h2 id="delete-dialog-title">Choose a transaction</h2>
+            <button
+              type="button"
+              class="sheet-close"
+              data-close-dialog
+              aria-label="Close delete transaction"
+            >
+              <i data-lucide="x" aria-hidden="true"></i>
+            </button>
+          </div>
+          <ul id="delete-transaction-list" class="delete-transaction-list" aria-live="polite"></ul>
+          <p class="dialog-help">Select the transaction you want to remove.</p>
+        </section>
+        <section id="delete-confirmation" aria-labelledby="delete-confirmation-title" hidden>
+          <div class="sheet-header">
+            <h2 id="delete-confirmation-title">Delete this transaction?</h2>
+          </div>
+          <p id="delete-transaction-summary" class="delete-summary"></p>
+          <div class="dialog-buttons">
+            <button type="button" class="button-secondary" id="cancel-transaction-delete">
+              Cancel
+            </button>
+            <button type="button" class="button-danger" id="confirm-transaction-delete">
+              Delete transaction
+            </button>
+          </div>
+        </section>
+      </div>
+    </dialog>
+
+    <p class="visually-hidden" id="action-status" role="status" aria-live="polite"></p>
+
+    <script type="module" src="../JavaScript/app.js"></script>
+  </body>
+</html>
